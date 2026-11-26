@@ -4,7 +4,7 @@
 <p align="center">
   <b>Lend this Mac's microphone to another Mac.</b><br>
   Talk into this one, and the other one hears it as if a mic were plugged in. Works over your LAN or Tailscale.<br>
-  <sub>Lend your Mac's microphone to another Mac — live, over LAN or Tailscale.</sub>
+  <sub>Lend your Mac's microphone to another Mac — live and encrypted, over LAN or Tailscale.</sub>
 </p>
 
 ---
@@ -44,7 +44,7 @@ Audio from the MacBook's microphone streams to the Mac mini in real time and bec
 
 ### Other highlights
 
-- **No cloud services involved**: audio goes straight between your own two computers, over your LAN or through Tailscale's encrypted tunnel.
+- **No cloud services involved**: audio goes straight between your own two computers, encrypted end to end, over your LAN or Tailscale.
 - **Works with any remote desktop tool**: UU Remote, Sunlogin, ToDesk and Screen Sharing all work alongside it.
 - **Automatic updates**: new versions install themselves, and you don't have to grant permissions again.
 - **Multilingual**: the interface is available in 简体中文, 繁體中文, English, 日本語, 한국어, Español, Français, Deutsch, Português and Русский. It defaults to Simplified Chinese; switch under "Settings… → General → Language".
@@ -125,6 +125,21 @@ A **modifier-key combination** works best, such as **left Ctrl + Option**, or Ct
 
 With the remote computer's input device set to MicHop Audio, hold the new shortcut in the remote desktop and speak — the remote computer will take dictation directly.
 
+## Sending the Mac mini's sound back (virtual speaker)
+
+The virtual audio device that comes with the receiver also includes a **virtual speaker, MicHop Speaker** (since 1.6.0). It's a separate device from MicHop Audio, which carries your microphone, so the two sounds never mix.
+
+On the receiver, go to "Settings… → Virtual Audio Device" and turn on "Send this Mac’s sound to MicHop Speaker":
+
+- The Mac mini's system output switches to MicHop Speaker, so **its own speakers stay silent** and nothing suddenly plays out loud in the room.
+- Remote desktop or screen-recording apps that let you pick an audio device (for example Sunlogin, some versions of ToDesk, OBS) can use MicHop Speaker as their audio source to send the Mac mini's sound back to you.
+- The keyboard volume keys still work on it, and the captured sound follows the volume.
+- When you turn the switch off, quit the receiver, or uninstall the virtual audio device, the system output automatically switches back to the previous device.
+
+> Remote desktop apps like UU Remote capture sound through Apple's screen recording, so they pick it up whichever device it plays to. For them, the main benefit of the virtual speaker is that "the Mac mini's own speakers stay silent while you still hear it remotely".
+
+The last row of "Setup" in the receiver's main window, "This Mac’s sound", shows where this computer's sound is currently going.
+
 ## Not on the same network? Use Tailscale
 
 1. Install [Tailscale](https://tailscale.com) on both computers and sign in to the same account.
@@ -135,8 +150,10 @@ The Tailscale address works both at home and away, and when the two computers ar
 
 ## Security
 
-- Every receiver has a random 6-digit passcode, and any connection with the wrong passcode is rejected. To get a new one, click "New" on the "Passcode" row of the receiver's main window (you'll then need to enter it again on the sender).
-- The receiver listens on a single port: TCP **8766** (audio). The stream isn't encrypted yet, so use it only on your home network or over Tailscale, and don't expose this port to the internet.
+- **Audio is encrypted end to end**: every connection starts with a key exchange (X25519), and every chunk of audio after that is encrypted with ChaCha20-Poly1305. This protects you from anyone on the same network who listens in or captures packets: they can't hear what you say, and they can't get the passcode. The passcode itself is never sent over the network.
+- Every receiver has a random 6-digit passcode, and any connection with the wrong passcode is rejected. After 5 wrong tries in a row, the receiver stops accepting new connections for 30 seconds and its main window shows "Someone is guessing the passcode". To get a new passcode, click "New" on the "Passcode" row of the receiver's main window (you'll then need to enter it again on the sender).
+- **What it can't protect against**: someone who actively hijacks the connection and impersonates the receiver. A 6-digit passcode has only a million possibilities, so after capturing one handshake they could try them all offline. That's why you should use it only on your home network or over Tailscale, and not expose the receiver's port (TCP **8766**) to the internet.
+- Both the sender and the receiver need to be version 1.6.0 or later. If one side is too old, the other side tells you it's "too old" and needs updating.
 
 ## FAQ
 

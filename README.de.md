@@ -4,7 +4,7 @@
 <p align="center">
   <b>Leih das Mikrofon dieses Macs einfach einem anderen Mac.</b><br>
   Du sprichst hier, und der andere Mac hat plötzlich ein Mikrofon – im lokalen Netzwerk oder über Tailscale.<br>
-  <sub>Lend your Mac's microphone to another Mac — live, over LAN or Tailscale.</sub>
+  <sub>Lend your Mac's microphone to another Mac — live and encrypted, over LAN or Tailscale.</sub>
 </p>
 
 ---
@@ -44,7 +44,7 @@ Der Ton vom Mikrofon des MacBooks wird in Echtzeit an den Mac mini übertragen u
 
 ### Weitere Merkmale
 
-- **Keine Cloud dazwischen**: Der Ton geht direkt zwischen deinen beiden Computern hin und her – über das lokale Netzwerk oder den verschlüsselten Tunnel von Tailscale.
+- **Keine Cloud dazwischen**: Der Ton geht direkt zwischen deinen beiden Computern hin und her, durchgehend verschlüsselt – über das lokale Netzwerk oder über Tailscale.
 - **Unabhängig von der Fernsteuerungs-App**: Funktioniert mit UU Remote, Sunlogin, ToDesk und der Bildschirmfreigabe.
 - **Automatische Updates**: Neue Versionen werden von selbst installiert, ohne dass du Berechtigungen neu erteilen musst.
 - **Mehrsprachig**: Die Oberfläche gibt es auf 简体中文, 繁體中文, English, 日本語, 한국어, Español, Français, Deutsch, Português und Русский. Standard ist Chinesisch; umstellen kannst du unter „Einstellungen… → Allgemein → Sprache / Language“.
@@ -125,6 +125,21 @@ Am besten eignet sich eine **Kombination aus Sondertasten**, etwa **linke Ctrl-T
 
 Stell das Eingabegerät des gesteuerten Macs auf MicHop Audio, halte in der Remote-Sitzung den neuen Kurzbefehl gedrückt und sprich – schon diktiert der gesteuerte Mac direkt.
 
+## Den Ton des Mac mini zurückholen (virtueller Lautsprecher)
+
+Das integrierte virtuelle Audiogerät des Receivers enthält außerdem einen **virtuellen Lautsprecher, MicHop Speaker** (ab 1.6.0). Er ist ein eigenes Gerät, getrennt von MicHop Audio, über das dein Mikrofonton läuft – die beiden Tonspuren vermischen sich also nicht.
+
+Schalte im Receiver unter „Einstellungen… → Virtuelles Audiogerät“ die Option „Ton dieses Macs an MicHop Speaker senden“ ein:
+
+- Die Systemausgabe des Mac mini wechselt auf MicHop Speaker, **die eigenen Lautsprecher bleiben stumm** – im Raum ertönt also nicht plötzlich etwas;
+- Fernsteuerungs- oder Bildschirmaufnahme-Apps, bei denen man ein Audiogerät auswählt (etwa manche Versionen von Sunlogin und ToDesk oder OBS), können MicHop Speaker als Tonquelle nehmen und so den Ton des Mac mini zu dir zurückholen;
+- Die Lautstärketasten der Tastatur funktionieren darauf ganz normal, und der aufgenommene Ton folgt der Lautstärke;
+- Schaltest du die Option aus, beendest den Receiver oder deinstallierst das virtuelle Audiogerät, wechselt die Systemausgabe automatisch zurück auf das vorherige Gerät.
+
+> Fernsteuerungs-Apps wie UU Remote, die den Ton über die Bildschirmaufnahme von macOS abgreifen, hören ihn unabhängig davon, auf welchem Gerät er ausgegeben wird. Für sie liegt der Hauptvorteil des virtuellen Lautsprechers darin, dass die Lautsprecher des Mac mini stumm bleiben, während du ihn aus der Ferne trotzdem hörst.
+
+Die letzte Zeile unter „Einrichtung“ im Hauptfenster des Receivers, „Ton dieses Macs“, zeigt an, wohin der Ton dieses Computers gerade ausgegeben wird.
+
 ## Nicht im selben Netzwerk? Nimm Tailscale
 
 1. Installiere [Tailscale](https://tailscale.com) auf beiden Computern und melde dich jeweils mit demselben Account an.
@@ -135,8 +150,10 @@ Die Tailscale-Adresse funktioniert zu Hause wie unterwegs; seid ihr im selben lo
 
 ## Sicherheit
 
-- Jeder Receiver hat einen zufälligen 6-stelligen Code; Verbindungen mit falschem Code werden immer abgelehnt. Einen neuen Code erzeugst du im Hauptfenster des Receivers in der Zeile „Code“ mit „Neu“ (danach musst du ihn im Sender neu eintragen).
-- Der Receiver lauscht nur auf einem Port: TCP **8766** (Audio). Die Übertragung ist derzeit nicht verschlüsselt. Nutze MicHop daher nur im Heimnetz oder über Tailscale und gib diesen Port nicht ins Internet frei.
+- **Der Ton ist durchgehend verschlüsselt**: Bei jeder Verbindung findet zuerst ein Schlüsselaustausch statt (X25519), danach wird jedes Stück Audio mit ChaCha20-Poly1305 verschlüsselt. Das schützt vor Leuten im selben Netzwerk, die mithören oder Pakete mitschneiden: Sie hören nicht, was du sagst, und kommen auch nicht an den Code. Der Code selbst wird nie übers Netz geschickt.
+- Jeder Receiver hat einen zufälligen 6-stelligen Code; Verbindungen mit falschem Code werden immer abgelehnt. Nach 5 Fehlversuchen in Folge nimmt der Receiver 30 Sekunden lang keine neuen Verbindungen an, und das Hauptfenster meldet „Jemand probiert Codes aus“. Einen neuen Code erzeugst du im Hauptfenster des Receivers in der Zeile „Code“ mit „Neu“ (danach musst du ihn im Sender neu eintragen).
+- **Wogegen es nicht schützt**: gegen jemanden, der die Verbindung aktiv kapert und sich als Receiver ausgibt. Ein 6-stelliger Code hat nur eine Million Möglichkeiten; wer einmal einen Handshake abgefangen hat, kann ihn offline durchprobieren. Nutze MicHop daher nur im Heimnetz oder über Tailscale und gib den Port des Receivers (TCP **8766**) nicht ins Internet frei.
+- Sender und Receiver müssen beide Version 1.6.0 oder neuer sein. Ist eine Seite zu alt, weist die andere darauf hin, dass sie aktualisiert werden muss.
 
 ## Häufige Fragen
 

@@ -4,7 +4,7 @@
 <p align="center">
   <b>Prêtez le micro de ce Mac à un autre Mac.</b><br>
   Vous parlez sur celui-ci, et l’autre se comporte comme s’il avait un micro branché ; en réseau local ou via Tailscale.<br>
-  <sub>Lend your Mac's microphone to another Mac — live, over LAN or Tailscale.</sub>
+  <sub>Lend your Mac's microphone to another Mac — live and encrypted, over LAN or Tailscale.</sub>
 </p>
 
 ---
@@ -44,7 +44,7 @@ Le son du micro du MacBook arrive en temps réel sur le Mac mini et devient le m
 
 ### Autres points forts
 
-- **Aucun service cloud** : le son circule directement entre vos deux ordinateurs, par le réseau local ou par le tunnel chiffré de Tailscale.
+- **Aucun service cloud** : le son circule directement entre vos deux ordinateurs, chiffré de bout en bout, par le réseau local ou via Tailscale.
 - **Indépendant du logiciel de bureau à distance** : fonctionne avec UU Remote, Sunlogin, ToDesk ou le Partage d’écran.
 - **Mises à jour automatiques** : l’app se met à jour d’elle-même quand une nouvelle version sort, sans qu’il faille réaccorder les autorisations.
 - **Multilingue** : l’interface est disponible en 简体中文, 繁體中文, English, 日本語, 한국어, Español, Français, Deutsch, Português et Русский. Le chinois est la langue par défaut ; changez-la dans « Réglages… → Général → Langue / Language ».
@@ -125,6 +125,21 @@ Privilégiez une **combinaison de touches de modification**, par exemple **Ctrl 
 
 Choisissez MicHop Audio comme périphérique d’entrée de l’ordinateur contrôlé, maintenez le nouveau raccourci dans le bureau à distance pendant que vous parlez, et l’ordinateur contrôlé transcrit directement votre dictée.
 
+## Récupérer le son du Mac mini (haut-parleur virtuel)
+
+Le périphérique audio virtuel fourni avec le récepteur comprend aussi un **haut-parleur virtuel, MicHop Speaker** (depuis la 1.6.0). C’est un périphérique distinct de MicHop Audio, qui diffuse le son de votre micro : les deux sons ne se mélangent pas.
+
+Sur le récepteur, activez « Envoyer le son de ce Mac vers MicHop Speaker » dans « Réglages… → Périphérique audio virtuel » :
+
+- La sortie système du Mac mini passe sur MicHop Speaker : **ses haut-parleurs restent muets**, et aucun son ne surgit soudain dans la pièce.
+- Les logiciels de bureau à distance ou d’enregistrement d’écran qui demandent de choisir un périphérique audio (par exemple Sunlogin, certaines versions de ToDesk, OBS) peuvent prendre MicHop Speaker comme source sonore pour renvoyer le son du Mac mini.
+- Les touches de volume du clavier fonctionnent normalement, et le son capté suit le volume.
+- Quand vous désactivez l’option, quittez le récepteur ou désinstallez le périphérique audio virtuel, la sortie système revient automatiquement sur le périphérique d’origine.
+
+> Les logiciels de bureau à distance qui captent le son via l’enregistrement d’écran d’Apple, comme UU Remote, l’enregistrent quel que soit le périphérique de sortie ; pour eux, l’intérêt principal du haut-parleur virtuel est que « les haut-parleurs du Mac mini restent muets, mais on entend toujours le son à distance ».
+
+Dans la fenêtre principale du récepteur, la dernière ligne de « Préparation », « Son de ce Mac », indique où part actuellement le son de cet ordinateur.
+
 ## Pas sur le même réseau ? Utilisez Tailscale
 
 1. Installez [Tailscale](https://tailscale.com) sur les deux ordinateurs et connectez-vous avec le même compte.
@@ -135,8 +150,10 @@ L’adresse Tailscale fonctionne aussi bien à la maison qu’à l’extérieur,
 
 ## Sécurité
 
-- Chaque récepteur possède un code aléatoire à 6 chiffres, et toute connexion avec un code erroné est refusée. Pour le changer, cliquez sur « Nouveau » dans la ligne « Code » de la fenêtre principale du récepteur (il faudra ensuite le saisir à nouveau sur l’émetteur).
-- Le récepteur n’écoute que sur un seul port : TCP **8766** (son). Pour l’instant, la transmission n’est pas chiffrée. Utilisez-le uniquement sur votre réseau domestique ou via Tailscale, et n’exposez pas ce port à Internet.
+- **Le son est chiffré de bout en bout** : chaque connexion commence par un échange de clés (X25519), puis chaque segment audio est chiffré avec ChaCha20-Poly1305. Cela protège contre quiconque écoute ou capture le trafic sur le même réseau : il ne peut ni entendre ce que vous dites, ni récupérer le code. Le code lui-même ne transite jamais sur le réseau.
+- Chaque récepteur possède un code aléatoire à 6 chiffres, et toute connexion avec un code erroné est refusée ; après 5 erreurs de suite, le récepteur n’accepte plus de nouvelle connexion pendant 30 secondes et la fenêtre principale affiche « Quelqu’un essaie de deviner le code ». Pour le changer, cliquez sur « Nouveau » dans la ligne « Code » de la fenêtre principale du récepteur (il faudra ensuite le saisir à nouveau sur l’émetteur).
+- **Ce qui n’est pas couvert** : quelqu’un qui détourne activement la connexion en se faisant passer pour le récepteur. Un code à 6 chiffres n’offre qu’un million de possibilités : avec une seule poignée de main interceptée, il peut le retrouver hors ligne. Utilisez donc MicHop uniquement sur votre réseau domestique ou via Tailscale, et n’exposez pas le port du récepteur (TCP **8766**) à Internet.
+- L’émetteur et le récepteur doivent tous deux être en version 1.6.0 ou plus récente. Si l’un des deux est trop ancien, l’autre indique qu’il faut le mettre à jour.
 
 ## Questions fréquentes
 

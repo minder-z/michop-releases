@@ -4,7 +4,7 @@
 <p align="center">
   <b>Presta el micrófono de este Mac a otro Mac.</b><br>
   Hablas en este y el otro se comporta como si tuviera un micrófono conectado; funciona por red local o por Tailscale.<br>
-  <sub>Lend your Mac's microphone to another Mac — live, over LAN or Tailscale.</sub>
+  <sub>Lend your Mac's microphone to another Mac — live and encrypted, over LAN or Tailscale.</sub>
 </p>
 
 ---
@@ -44,7 +44,7 @@ El sonido del micrófono del MacBook llega en tiempo real al Mac mini y se convi
 
 ### Otras características
 
-- **Sin servicios en la nube**: el audio viaja directamente entre tus dos equipos, por la red local o por el túnel cifrado de Tailscale.
+- **Sin servicios en la nube**: el audio viaja directamente entre tus dos equipos, cifrado de extremo a extremo, por la red local o por Tailscale.
 - **Independiente del escritorio remoto**: funciona con UU Remote, Sunlogin, ToDesk o Compartir pantalla.
 - **Actualizaciones automáticas**: se actualiza solo cuando hay una versión nueva y no tienes que volver a conceder los permisos.
 - **Varios idiomas**: la interfaz está disponible en 简体中文, 繁體中文, English, 日本語, 한국어, Español, Français, Deutsch, Português y Русский. El idioma predeterminado es el chino; cámbialo en «Ajustes… → General → Idioma / Language».
@@ -125,6 +125,21 @@ Se recomienda una **combinación de teclas modificadoras**, como **Ctrl + Option
 
 Pon MicHop Audio como dispositivo de entrada del equipo controlado, mantén pulsado el nuevo atajo en el escritorio remoto mientras hablas, y el equipo controlado dictará directamente.
 
+## Recupera el sonido del Mac mini (altavoz virtual)
+
+El dispositivo de audio virtual que trae el receptor incluye también un **altavoz virtual, MicHop Speaker** (desde la 1.6.0). Es un dispositivo independiente de MicHop Audio, que es donde suena tu micrófono, así que los sonidos no se mezclan.
+
+En el receptor, activa «Enviar el sonido de este Mac a MicHop Speaker» en «Ajustes… → Dispositivo de audio virtual»:
+
+- La salida del sistema del Mac mini pasa a MicHop Speaker, así que **sus altavoces no suenan** y no saldrá ningún sonido de repente en la habitación.
+- En las apps de escritorio remoto o de grabación de pantalla que piden elegir un dispositivo de audio (por ejemplo, Sunlogin, algunas versiones de ToDesk u OBS), puedes elegir MicHop Speaker como fuente de sonido para recuperar el sonido del Mac mini.
+- Las teclas de volumen del teclado funcionan con normalidad, y el sonido grabado sigue el volumen.
+- Al desactivar el interruptor, cerrar el receptor o desinstalar el dispositivo de audio virtual, la salida del sistema vuelve automáticamente al dispositivo anterior.
+
+> Las apps de escritorio remoto que capturan el sonido con la grabación de pantalla de Apple, como UU Remote, lo graban vaya al dispositivo que vaya; para ellas, la principal ventaja del altavoz virtual es que «los altavoces del Mac mini no suenan y en el otro lado se sigue oyendo».
+
+En la ventana principal del receptor, la última fila de «Preparación», «Sonido de este Mac», muestra adónde va ahora el sonido de este equipo.
+
 ## ¿No están en la misma red? Usa Tailscale
 
 1. Instala [Tailscale](https://tailscale.com) en los dos equipos e inicia sesión con la misma cuenta.
@@ -135,8 +150,10 @@ La dirección de Tailscale funciona tanto en casa como fuera, y cuando los dos e
 
 ## Seguridad
 
-- Cada receptor tiene un código aleatorio de 6 dígitos y rechaza cualquier conexión con un código incorrecto. Puedes cambiarlo haciendo clic en «Nuevo» en la fila «Código» de la ventana principal del receptor (después tendrás que volver a introducirlo en el emisor).
-- El receptor solo escucha en un puerto: TCP **8766** (audio). Por ahora la transmisión no está cifrada. Úsalo solo en tu red doméstica o dentro de Tailscale y no expongas ese puerto a internet.
+- **El audio va cifrado de extremo a extremo**: cada conexión empieza con un intercambio de claves (X25519) y después cada fragmento de audio se cifra con ChaCha20-Poly1305. Así quedas protegido frente a quien escuche o capture el tráfico en la misma red: no podrá oír lo que dices ni obtener el código. El código en sí nunca se envía por la red.
+- Cada receptor tiene un código aleatorio de 6 dígitos y rechaza cualquier conexión con un código incorrecto; tras 5 fallos seguidos, el receptor no acepta conexiones nuevas durante 30 segundos y la ventana principal avisa con «Alguien está probando códigos». Puedes cambiarlo haciendo clic en «Nuevo» en la fila «Código» de la ventana principal del receptor (después tendrás que volver a introducirlo en el emisor).
+- **Lo que no puede impedir**: que alguien secuestre activamente la conexión y se haga pasar por el receptor. Un código de 6 dígitos solo tiene un millón de combinaciones, y con una sola negociación capturada podría adivinarlo sin conexión. Por eso conviene usarlo solo en tu red doméstica o dentro de Tailscale, y no exponer el puerto del receptor (TCP **8766**) a internet.
+- El emisor y el receptor tienen que tener la versión 1.6.0 o posterior. Si uno de los dos es demasiado antiguo, el otro avisa de que hay que actualizarlo.
 
 ## Preguntas frecuentes
 
