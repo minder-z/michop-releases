@@ -3,214 +3,156 @@
 
 <p align="center">
   <b>Empreste o microfone deste Mac para outro Mac.</b><br>
-  Envie como áudio ou como texto, pela rede local ou pelo Tailscale.<br>
-  <sub>Lend your Mac's microphone to another Mac — as live audio or as text, over LAN or Tailscale.</sub>
+  Você fala aqui e o outro Mac ganha um microfone — pela rede local ou pelo Tailscale.<br>
+  <sub>Lend your Mac's microphone to another Mac — live, over LAN or Tailscale.</sub>
 </p>
 
 ---
 
 ## Para que serve
 
-Eu costumo trabalhar num MacBook e uso um software de acesso remoto (UU Remote, Sunlogin, ToDesk etc.) para me conectar a um Mac mini e trabalhar nele — por exemplo, pedir ao Claude Code para escrever código, editar vídeos ou cuidar de sites.
+No dia a dia eu trabalho num MacBook e uso um app de acesso remoto (UU Remote, Sunlogin, ToDesk etc.) para me conectar a um Mac mini, onde o trabalho de verdade acontece: deixar o Claude Code escrever código, editar vídeos, cuidar de sites.
 
-O problema: **o Mac mini não tem microfone, e o software de acesso remoto não transmite o microfone do MacBook**. Por isso, não dá para usar entrada por voz dentro da área de trabalho remota.
+O problema: **o Mac mini não tem microfone, e o app de acesso remoto não repassa o microfone do MacBook**. Por isso, dentro da área de trabalho remota não dá para usar entrada por voz.
 
-O MicHop resolve exatamente isso. Instale um app em cada computador:
+É isso que o MicHop resolve. Cada computador recebe um app:
 
-- **O computador em que você fala** (por exemplo, o MacBook): instale o "MicHop"
-- **O computador que faz o trabalho** (por exemplo, o Mac mini): instale o "MicHop Receiver"
-
-### Dois jeitos de enviar, alternáveis a qualquer momento na janela principal
+- **O computador em que você fala** (por exemplo, o MacBook): instale o “MicHop”
+- **O computador que faz o trabalho** (por exemplo, o Mac mini): instale o “MicHop Receiver”
 
 ```
-MacBook (você fala)                          Mac mini (trabalha)
+MacBook (você fala)                          Mac mini (faz o trabalho)
 
-Microfone ── 🔊 Enviar áudio ─────────►  Microfone virtual (MicHop Audio, embutido)
-                                      → Ditado / WeChat Input Method / modo de voz do Claude Code
-
-Ditado ───── 📝 Enviar texto ─────────►  Colado onde está o cursor, com Return automático opcional
+Microfone ──── 🔊 Áudio ──────────────►  Microfone virtual (MicHop Audio embutido)
+                                      → Ditado / método de entrada do WeChat / modo de voz do Claude Code
 
               pela rede local ou pelo Tailscale
 ```
 
-**🔊 Enviar áudio: o Mac mini "ouve" você diretamente**
+O som do microfone do MacBook chega ao Mac mini em tempo real e passa a funcionar como o microfone do Mac mini. Qualquer app do Mac mini que precise de microfone pode usá-lo: o Ditado do macOS, a entrada por voz do método de entrada do WeChat, o modo de voz do Claude Code e assim por diante.
 
-O som do microfone do MacBook é transmitido em tempo real para o Mac mini e passa a ser o microfone do Mac mini. Qualquer app do Mac mini que precise de microfone pode usá-lo, como o Ditado do sistema, a entrada por voz do WeChat Input Method ou o modo de voz do Claude Code.
-
-- O Receiver já traz seu próprio dispositivo de áudio virtual, o **MicHop Audio**. Na primeira vez que você enviar áudio, ele oferece a instalação (é preciso digitar a senha de administrador uma vez); não há nada para baixar à parte. Quem já instalou o [BlackHole](https://github.com/ExistentialAudio/BlackHole) pode continuar usando.
-- Tem cancelamento de eco integrado, então não há eco mesmo conectado por software de acesso remoto.
-- A tecla Fn não passa pelo software de acesso remoto; lembre-se de trocar o atalho da entrada por voz por uma combinação de teclas modificadoras, como Ctrl + Option. [Veja mais abaixo](#dica-a-tecla-fn-não-passa-pela-conexão-remota-troque-o-atalho).
-
-**📝 Enviar texto: reconhece no MacBook e envia as palavras**
-
-No MacBook, pressione ⌃⌥Espaço (Ctrl + Option + Espaço) e use o Ditado do sistema para transformar sua fala em texto. O texto é enviado ao Mac mini e colado automaticamente onde está o cursor; ele também pode pressionar Return automaticamente para enviar direto ao Claude.
-
-- Não é preciso instalar driver de áudio nem configurar áudio no Mac mini — é a opção mais prática e mais estável.
-- É o modo padrão do app.
-
-| | 🔊 Enviar áudio | 📝 Enviar texto |
-|---|---|---|
-| Em qual computador a fala é reconhecida | Mac mini (com o próprio ditado ou método de entrada) | MacBook (com o Ditado do sistema) |
-| O que o Mac mini precisa | Receiver + o dispositivo de áudio virtual embutido (instalado no primeiro uso) | Só o Receiver |
-| Ideal para | Usar o método de entrada, o ditado ou o modo de voz do Claude no Mac mini | Só transformar o que você fala em texto digitado |
+- O Receiver já vem com o dispositivo de áudio virtual **MicHop Audio**. Na primeira vez que você o abre, ele oferece a instalação (é preciso digitar a senha de administrador uma vez); não há nada para baixar à parte. Quem já tem o [BlackHole](https://github.com/ExistentialAudio/BlackHole) instalado pode continuar usando.
+- Dois jeitos de falar, sempre disponíveis: pressione **⌃⌥M** uma vez para enviar sem parar e de novo para parar; ou **mantenha ⌃⌥ pressionadas** enquanto fala e solte para parar.
+- Cancelamento de eco embutido: nada de eco, mesmo conectado por um app de acesso remoto.
+- A tecla Fn não passa pelos apps de acesso remoto. Por isso, troque no Mac mini o atalho da entrada por voz por uma combinação de teclas modificadoras, como Ctrl + Option. [Veja os detalhes abaixo](#dica-a-tecla-fn-não-chega-pela-conexão-remota-então-troque-o-atalho).
 
 ### Como conectar os dois computadores
 
-- **Na mesma rede local**: basta informar o IP local do Mac mini.
-- **Em lugares diferentes**: instale o [Tailscale](https://tailscale.com) nos dois computadores para formar uma rede local virtual e informe o **IP do Tailscale** do Mac mini (começa com 100). **Tanto o áudio quanto o texto podem passar pelo Tailscale**, então funciona igual em casa ou fora.
+- **Na mesma rede local**: basta digitar o IP local do Mac mini.
+- **Em lugares diferentes**: instale o [Tailscale](https://tailscale.com) nos dois computadores para criar uma rede local virtual e digite o **IP do Tailscale** do Mac mini (começa com 100). Funciona igual em casa ou fora.
 - A janela do Receiver mostra o IP local, o IP do Tailscale e o código, cada um com um botão de copiar ao lado.
 
 ### Outros destaques
 
-- **Nenhum serviço de nuvem no caminho**: o áudio e o texto vão direto entre os seus dois computadores, pela rede local ou pelo túnel criptografado do Tailscale.
-- **Independente do software de acesso remoto**: funciona junto com UU Remote, Sunlogin, ToDesk e Compartilhamento de Tela.
-- **Atualização automática**: atualiza sozinho quando sai uma versão nova, sem precisar conceder as permissões de novo.
-- **Multilíngue**: a interface está disponível em 简体中文, 繁體中文, English, 日本語, 한국어, Español, Français, Deutsch, Português e Русский. O padrão é chinês; troque o idioma em "Ajustes… → Geral → Idioma / Language".
+- **Nenhum serviço na nuvem no meio do caminho**: o som vai direto entre os seus dois computadores, pela rede local ou pelo túnel criptografado do Tailscale.
+- **Independente do app de acesso remoto**: funciona com UU Remote, Sunlogin, ToDesk e o Compartilhamento de Tela.
+- **Atualização automática**: quando sai uma versão nova, o app se atualiza sozinho, sem precisar autorizar as permissões de novo.
+- **Vários idiomas**: a interface está disponível em 简体中文, 繁體中文, English, 日本語, 한국어, Español, Français, Deutsch, Português e Русский. O padrão é chinês; para mudar, vá em “Ajustes… → Geral → Idioma / Language”.
 
 ## Download e instalação
 
 Baixe em [Releases](../../releases/latest):
 
-| Arquivo | Em qual computador | Ícone na barra de menus |
+| Arquivo | Em qual computador instalar | Ícone na barra de menus |
 |---|---|---|
-| `MicHop.zip` (MicHop) | O computador em que você fala, ex.: MacBook | Um quadrado de cantos arredondados, igual ao ícone do app |
-| `MicHop-Receiver.zip` (MicHop Receiver) | O computador que trabalha, ex.: Mac mini | Igual ao de cima |
+| `MicHop.zip` (MicHop) | O computador em que você fala, por exemplo o MacBook | Dois microfones, igual ao ícone do app |
+| `MicHop-Receiver.zip` (MicHop Receiver) | O computador que faz o trabalho, por exemplo o Mac mini | Igual |
 
-A cor do ícone na barra de menus indica o estado: **cinza** = não conectado, **verde** = conectado, **vermelho** = transmitindo (falando / recebendo áudio).
+A cor do ícone na barra de menus indica o estado: **cinza** = desconectado, **verde** = conectado, **vermelho** = enviando áudio.
 
-> **Nos dois apps, tudo gira em torno da janela principal**: clique no ícone do Dock para abrir a janela principal. No topo, dois blocos mostram o estado: "Conexão" (cinza / azul) e "Áudio" (cinza / vermelho), e as ações do dia a dia ficam na própria janela; idioma, atualização automática e afins ficam em "Ajustes…" (⌘,). O ícone da barra de menus e o clique com o botão direito no ícone do Dock mantêm só os itens mais usados. Quando o notch da câmera do MacBook esconder o ícone da barra de menus, use o ícone do Dock.
+> **Nos dois apps, tudo gira em torno da janela principal**: clique no ícone do Dock para abri-la. No topo há duas áreas de estado, “Conexão” (cinza/azul) e “Áudio” (cinza/vermelho), e as ações do dia a dia ficam na própria janela. Atalhos, idioma, atualização automática etc. ficam em “Ajustes…” (⌘,). O ícone da barra de menus e o menu de contexto do ícone do Dock trazem só as opções mais usadas. Se o entalhe da câmera do MacBook esconder o ícone da barra de menus, use o ícone do Dock.
 
-Requer macOS 13 ou posterior; funciona em Macs com Apple Silicon e com Intel.
+Requer macOS 13 ou posterior e funciona tanto em Macs com chip da Apple quanto em Macs com processador Intel.
 
-> **Na primeira abertura aparece "não é possível verificar o desenvolvedor"**: isso acontece porque o app não passou pela notarização paga da Apple. Abra Ajustes do Sistema → Privacidade e Segurança e clique em "Abrir Mesmo Assim" na parte de baixo da página. Você também pode executar este comando no Terminal para remover a quarentena e depois abrir o app:
+> **Na primeira abertura aparece o aviso de que o desenvolvedor não pode ser verificado**: isso acontece porque o app não passou pela notarização paga da Apple. Abra Ajustes do Sistema → Privacidade e Segurança e, na parte de baixo da página, clique em “Abrir Mesmo Assim”. Outra opção é rodar este comando no Terminal para remover a quarentena e depois abrir o app:
 > ```bash
 > xattr -dr com.apple.quarantine "/Applications/MicHop Receiver.app"
 > ```
 
-### 1. O computador que trabalha (Receiver)
+### 1. O computador que faz o trabalho (Receiver)
 
-1. Descompacte `MicHop-Receiver.zip`, arraste o "MicHop Receiver" para "Aplicativos" e abra-o.
-2. Siga as instruções para ativar a permissão de **Acessibilidade**: Ajustes do Sistema → Privacidade e Segurança → Acessibilidade → ative o "MicHop Receiver". Ele precisa dessa permissão para pressionar ⌘V por você.
-   - Se aparecer "Deseja que o aplicativo aceite conexões de rede de entrada?", clique em **Permitir**.
-3. Clique no ícone do "MicHop Receiver" no Dock. Na janela principal você vê:
-   - **Dados de conexão**: o endereço local deste Mac, o endereço do Tailscale e o código, cada um com um botão de copiar ao lado.
-   - **Preparação**: a linha "Permissão de acessibilidade" deve mostrar um visto verde. Itens com aviso amarelo trazem, à direita, um botão que resolve o problema.
-4. "Abrir ao iniciar sessão" vem ativado por padrão; se não precisar disso, desative em "Ajustes… → Geral".
+1. Descompacte o `MicHop-Receiver.zip`, arraste o “MicHop Receiver” para a pasta “Aplicativos” e abra-o.
+   - Se aparecer a pergunta se o app pode aceitar conexões de rede de entrada, clique em **Permitir**.
+2. Na primeira abertura, o app oferece instalar o dispositivo de áudio virtual embutido **MicHop Audio**: clique em “Instalar” e digite a senha de administrador uma vez. Ao terminar, o som do sistema falha por um ou dois segundos. Você também pode instalar depois, em “Ajustes… → Dispositivo de áudio virtual”.
+3. Depois de instalar, siga a indicação e mude o **dispositivo de entrada do sistema** para MicHop Audio (a área “Preparação” da janela principal também tem um botão “Corrigir” para isso). O dispositivo de **saída** do sistema pode continuar nos alto-falantes (ou no dispositivo de áudio do app de acesso remoto). O próprio MicHop Audio não pode ser escolhido como saída do sistema, então o som do sistema não se mistura ao seu.
+4. Na janela principal você vê:
+   - **Dados de conexão**: o endereço local, o endereço do Tailscale e o código deste Mac, cada um com um botão de copiar ao lado.
+   - **Preparação**: quando o dispositivo de áudio virtual e a entrada do sistema estão com o visto verde, está tudo pronto. Os itens com aviso amarelo mostram à direita um botão para corrigir.
+5. Por padrão, o Receiver abre sozinho ao iniciar sessão. Se não quiser isso, desative em “Ajustes… → Geral”.
+
+> **Já tinha o BlackHole instalado?** Ele continua funcionando: em “Preparação → Tocar em”, escolha o dispositivo de áudio que quiser usar. Para trocar pelo embutido, clique em “Instalar”, ao lado de “Você pode usar o dispositivo virtual embutido”. Com o BlackHole, cuidado para não escolhê-lo como saída do sistema; se isso acontecer, aparece em “Preparação” um aviso de “Saída do sistema”, e basta clicar em “Voltar aos alto-falantes”.
 
 ### 2. O computador em que você fala (emissor)
 
-1. Descompacte `MicHop.zip`, arraste o "MicHop" para "Aplicativos" e abra-o.
-2. Na primeira vez, abre-se a janela de ajustes: informe o **endereço** e o **código** do Receiver, clique em "Testar conexão" e, quando aparecer em verde "Conectado — pronto para usar", clique em "Salvar".
-   - Na janela do Receiver, os botões de copiar ao lado dos endereços e do código copiam cada valor separadamente.
-   - Você também pode clicar em "Copiar tudo" no Receiver e colar o bloco inteiro no campo "Endereço do receptor". O emissor encontra o endereço automaticamente (dando preferência ao endereço do Tailscale, se houver) e também preenche o código.
-   - Se aparecer "Permitir encontrar dispositivos na rede local", clique em **Permitir**.
-3. Confirme que o Ditado do sistema está ativado: Ajustes do Sistema → Teclado → Ditado.
-4. Quando o topo da janela principal mostrar "Conectado ao receptor", está tudo pronto. Para mudar o endereço ou o código depois, clique em "Alterar…" na seção "Receptor" da janela principal, ou pressione ⌘,.
+1. Descompacte o `MicHop.zip`, arraste o “MicHop” para a pasta “Aplicativos” e abra-o.
+2. Na primeira abertura aparece a janela de configuração: digite o **endereço** e o **código** do Receiver, clique em “Testar conexão” e, quando aparecer em verde “Conectado — pronto para usar”, clique em “Salvar”.
+   - Na janela do Receiver, os botões de copiar ao lado do endereço e do código copiam cada item separadamente.
+   - Você também pode clicar em “Copiar tudo” no Receiver e colar o bloco inteiro no campo “Endereço”. O emissor escolhe o endereço sozinho (dando preferência ao do Tailscale, se houver) e preenche o código automaticamente.
+   - Se aparecer o pedido para encontrar dispositivos na rede local, clique em **Permitir**.
+3. Na primeira vez, o app pede acesso ao **Microfone**: clique em Permitir. Ele também pede acesso à **Acessibilidade** (para detectar quando você mantém ⌃⌥ pressionadas); siga as instruções: Ajustes do Sistema → Privacidade e Segurança → Acessibilidade → ative o “MicHop”.
+4. Assim que o app abre, ele se conecta ao Receiver. Quando “Conexão” fica azul na janela principal e o ícone da barra de menus fica verde, já pode usar. Para mudar o endereço ou o código depois, clique em “Alterar…” na área “Receptor” da janela principal, ou pressione ⌘,.
 
 ## Como usar
 
-1. Primeiro, na área de trabalho remota, clique num campo de texto do computador que trabalha, por exemplo no Claude Code.
-2. Pressione **⌃⌥Espaço (Ctrl + Option + Espaço)**: uma janelinha aparece na parte de baixo da tela e o ditado começa automaticamente. Se o ditado não começar sozinho, pressione Fn uma vez.
-3. Fale e, ao terminar, pressione **Return**: o texto aparece no outro computador.
+Primeiro, na área de trabalho remota, clique no ponto do outro computador onde você quer usar a voz: o modo de voz do Claude Code, o Ditado ou um método de entrada. Depois, os dois jeitos de falar ficam disponíveis a qualquer momento:
 
-| Tecla | Função |
-|---|---|
-| Return / ⌃⌥Espaço de novo | Enviar |
-| Shift + Return | Nova linha |
-| Esc | Cancelar |
+1. **Envio contínuo**: pressione **⌃⌥M (Ctrl + Option + M)** uma vez, ou clique em “Iniciar áudio” na janela principal, e o microfone fica aberto; pressione de novo para parar.
+2. **Segurar para falar**: **mantenha Ctrl + Option pressionadas enquanto fala e solte para parar**. O microfone só fica aberto enquanto as teclas estão pressionadas.
 
-O topo da janelinha mostra para qual computador o texto vai. No canto inferior esquerdo fica a opção "Pressionar Enter após enviar", marcada por padrão, para que o texto seja enviado direto ao Claude. Se preferir revisar antes de enviar manualmente, desmarque (a mesma opção também está em "Opções" na janela principal).
+Durante o envio, “Áudio” na janela principal e o ícone da barra de menus ficam vermelhos; do lado do Receiver, “Áudio” também fica vermelho.
 
-Se o software de acesso remoto capturar essa combinação de teclas e a janelinha não aparecer, clique no botão grande "Falar" na janela principal, ou no ícone da barra de menus → "Falar".
+- As teclas que você segura também são repassadas pelo app de acesso remoto ao outro computador. Se lá você também definir Ctrl + Option como atalho de voz do Ditado ou do método de entrada (veja a [dica abaixo](#dica-a-tecla-fn-não-chega-pela-conexão-remota-então-troque-o-atalho)), **um único toque já começa a enviar o áudio e faz o outro lado começar a ditar**.
+- Enquanto você segura as teclas, o MicHop silencia temporariamente este Mac. Assim o som do outro computador, devolvido pelo app de acesso remoto, não é captado pelo microfone e não vira eco. Cerca de 1 segundo depois de soltar, o som volta. (No envio contínuo, quem cuida disso é o cancelamento de eco da Apple.)
 
-> **Os atalhos podem ser alterados**: em "Ajustes… → Atalhos", clique no botão e pressione a nova combinação de teclas. Em alguns Macs, o ⌃⌥Espaço já está ocupado pelo atalho do sistema "Selecionar a próxima fonte no menu Entrada", e pressioná-lo troca a fonte de entrada. Nesse caso, o app mostra um aviso laranja: desative esse item em Ajustes do Sistema → Teclado → Atalhos de Teclado → Fontes de Entrada, ou escolha outra combinação no MicHop.
+> **Os atalhos podem ser alterados**: em “Ajustes… → Atalhos”, clique em um botão e pressione a nova combinação. “Começar a falar” aceita qualquer combinação com ⌃, ⌥ ou ⌘; “Segurar para falar” precisa de duas ou mais teclas entre ⌃ ⌥ ⇧ ⌘. Se a combinação escolhida já estiver em uso pelo sistema (em muitos Macs, ⌃⌥Espaço é “Selecionar a próxima fonte no menu Entrada”), o app mostra um aviso em laranja: desative esse item em Ajustes do Sistema → Teclado → Atalhos de Teclado ou escolha outra combinação.
 
-## Dois modos de envio
-
-Alterne na janela principal, em "Enviar como", clicando no cartão "Texto" ou "Áudio"; o menu do ícone da barra de menus também permite trocar. **O padrão é Enviar texto.**
-
-| | Enviar texto (padrão) | Enviar áudio |
-|---|---|---|
-| Onde a fala é reconhecida | Neste Mac, pelo Ditado do sistema | No outro computador, pelo próprio ditado ou pelo modo de voz do Claude Code |
-| O que o ⌃⌥Espaço faz | Abre a janelinha de ditado | Inicia ou para o modo "Sempre ativo" |
-| Segurar ⌃⌥ | — | Envia só enquanto segura; para ao soltar |
-| Botão grande na janela principal | "Falar" | "Iniciar áudio" / "Parar áudio" |
-| O que o outro lado precisa | Só o Receiver | O Receiver e o dispositivo de áudio virtual embutido |
-
-## Modo Enviar áudio
-
-Use este modo quando quiser que o computador que trabalha **ouça sua voz diretamente**, por exemplo para usar o modo de voz do Claude Code nesse computador ou o próprio ditado dele.
-
-```
-Microfone do MacBook ──áudio──► Receiver ──► Dispositivo de áudio virtual MicHop Audio ──► qualquer app desse Mac que "escute o microfone"
-```
-
-**Antes, no computador do Receiver:**
-
-1. Instale o dispositivo de áudio virtual embutido, o **MicHop Audio**: na primeira vez que o emissor enviar áudio, o Receiver mostra um aviso; clique em "Instalar". Você também pode clicar em "Instalar" em "Ajustes… → Dispositivo de áudio virtual" no Receiver. O sistema pede a senha de administrador uma vez e, ao terminar, o som do sistema é interrompido por um ou dois segundos.
-2. Depois de instalado, siga o aviso e mude o **dispositivo de entrada do sistema** para MicHop Audio (em "Preparação", na janela principal, também há o botão "Corrigir").
-3. Mantenha o dispositivo de **saída** do sistema nos alto-falantes (ou no dispositivo de áudio do software de acesso remoto). O próprio MicHop Audio não pode ser escolhido como saída do sistema, então o som do sistema não se mistura.
-
-> **Já instalou o BlackHole antes?** Ele continua funcionando: em "Preparação → Tocar em", escolha o dispositivo que preferir. Para trocar pelo embutido, clique em "Instalar" ao lado de "Você pode usar o dispositivo virtual embutido". Se usar o BlackHole, cuidado para não escolhê-lo como saída do sistema; se escolher errado, aparecerá em "Preparação" um aviso de "Saída do sistema", e basta clicar em "Voltar aos alto-falantes".
-
-> **Por que há eco?** Muitos softwares de acesso remoto (como o UU Remote) capturam o som do computador controlado usando o framework de gravação de tela da Apple, que grava **o som de todos os apps** desse computador, não importa em qual dispositivo de áudio ele toque. Quando o MicHop toca sua voz no dispositivo de áudio virtual, ela também é gravada, volta para o seu computador, sai pelos alto-falantes e é captada de novo pelo microfone.
+> **Por que aparece eco?** Muitos apps de acesso remoto (como o UU Remote) captam o som do Mac controlado usando o framework de gravação de tela da Apple, que grava **o som de todos os apps daquele computador**, não importa em qual dispositivo de áudio ele toque. Quando o MicHop toca a sua voz no dispositivo de áudio virtual, ela é gravada junto, enviada de volta ao seu computador, sai pelos alto-falantes e é captada de novo pelo microfone.
 >
-> Por isso o emissor vem com o **"Cancelamento de eco"** ativado por padrão (dá para desativar em "Opções" na janela principal). Ele usa o processamento de voz da Apple, o mesmo do FaceTime: subtrai do microfone o som que volta, abaixa os outros sons enquanto você fala e, de quebra, reduz o ruído. Com fones de ouvido o resultado é melhor.
+> Por isso o **cancelamento de eco** vem ativado por padrão no emissor (dá para desativar em “Opções”, na janela principal). Ele usa o processamento de voz da Apple, o mesmo do FaceTime: subtrai do microfone o som que volta, abaixa os outros sons enquanto você fala e ainda reduz o ruído. Com fones de ouvido, o resultado é ainda melhor.
 
-**Como usar:**
+### Dica: a tecla Fn não chega pela conexão remota, então troque o atalho
 
-Na janela principal, em "Enviar como", escolha "Áudio": o emissor se conecta ao Receiver (na primeira vez, será pedida a permissão do microfone), "Conexão" fica azul e o ícone da barra de menus fica verde. A partir daí, há duas formas de falar, sempre disponíveis:
+Quando você se conecta por apps como UU Remote, Sunlogin ou ToDesk, **a tecla Fn pressionada no seu Mac não chega ao Mac controlado**. Nem o Ditado do macOS nem a entrada por voz do método de entrada do WeChat são acionados. Há dois motivos: o seu próprio Mac intercepta a tecla Fn antes (e começa ele mesmo a ditar); e, mesmo que o app de acesso remoto a repasse, no Mac controlado ela é só uma “tecla simulada”, que o sistema e os métodos de entrada normalmente ignoram.
 
-1. **Sempre ativo**: pressione **⌃⌥Espaço** uma vez (ou clique em "Iniciar áudio") e o microfone fica ligado; pressione de novo para parar.
-2. **Segurar para falar**: **segure Ctrl + Option enquanto fala e solte para parar**. O microfone só fica ligado enquanto você segura as teclas: "Áudio" fica vermelho na janela principal e o ícone da barra de menus também; ao soltar, o microfone desliga e o volume deste Mac também não é abaixado. Na primeira vez, será pedida a permissão de Acessibilidade, usada para detectar essa combinação de teclas; se ela não estiver ativada, "Opções" na janela principal avisa, e basta clicar em "Ativar…".
-3. O software de acesso remoto também repassa a combinação que você segura para o computador que trabalha. Se nesse computador você também definir Ctrl + Option como atalho de voz do ditado ou do método de entrada (veja [a dica abaixo](#dica-a-tecla-fn-não-passa-pela-conexão-remota-troque-o-atalho)), **um único toque já envia o áudio e faz o ditado começar do outro lado**.
-4. Os dois atalhos podem ser alterados em "Ajustes… → Atalhos".
+A solução é trocar o atalho da entrada por voz no **Mac controlado** (por exemplo, o Mac mini):
 
-> Enquanto você segura as teclas, o MicHop silencia este Mac temporariamente, para que o som devolvido pelo app de acesso remoto não chegue ao microfone e cause eco; o som volta cerca de 1 segundo depois de soltar. (O modo Sempre ativo usa o cancelamento de eco da Apple.)
+- **Ditado do macOS**: Ajustes do Sistema → Teclado → Ditado → Atalho → “Personalizar”.
+- **Método de entrada do WeChat**: nos ajustes do método de entrada do WeChat, altere o atalho da entrada por voz.
 
-### Dica: a tecla Fn não passa pela conexão remota, troque o atalho
+O ideal é usar uma **combinação de teclas modificadoras**, como **Ctrl esquerdo + Option**, ou Ctrl com outra tecla modificadora (Option, Shift, Command).
 
-Quando você está conectado por um software de acesso remoto como UU Remote, Sunlogin ou ToDesk, **pressionar Fn no seu Mac não chega ao computador controlado**. Seja o Ditado do sistema ou a entrada por voz do WeChat Input Method no computador controlado, nada é acionado. Há dois motivos: a tecla Fn é interceptada primeiro pelo seu Mac (que inicia o próprio ditado); e, mesmo que o software remoto a repasse, do outro lado ela é só um "toque de tecla simulado", que o sistema e os métodos de entrada normalmente ignoram.
+**Não use Ctrl com número ou letra** (como Ctrl+D). Na entrada por voz normalmente você mantém as teclas pressionadas, e uma letra ou número segurado é digitado sem parar, o que atrapalha bastante. Uma combinação só de teclas modificadoras não digita nada enquanto é mantida.
 
-A solução: no **computador controlado** (por exemplo, o Mac mini), troque o atalho da entrada por voz:
-
-- **Ditado do sistema**: Ajustes do Sistema → Teclado → Ditado → Atalho → "Personalizar".
-- **WeChat Input Method**: altere o atalho da entrada por voz nos ajustes do WeChat Input Method.
-
-Recomendamos uma **combinação de teclas modificadoras**, como **Ctrl esquerdo + Option**, ou Ctrl com outra tecla modificadora (Option, Shift, Command).
-
-**Não use Ctrl com uma tecla de número ou letra** (como Ctrl+D). A entrada por voz normalmente exige segurar a tecla enquanto você fala, e segurar uma letra ou número faz o caractere se repetir sem parar, o que é muito incômodo. Uma combinação só de modificadoras não digita nenhum caractere quando mantida pressionada.
-
-Este truque funciona junto com o modo "Enviar áudio": defina o MicHop Audio como dispositivo de entrada do computador controlado, segure o novo atalho na área de trabalho remota enquanto fala, e o computador controlado consegue fazer o ditado diretamente.
+Com o dispositivo de entrada do Mac controlado definido como MicHop Audio, segure o novo atalho na área de trabalho remota e fale: o Mac controlado já começa a ditar.
 
 ## Não estão na mesma rede? Use o Tailscale
 
-1. Instale o [Tailscale](https://tailscale.com) nos dois computadores e entre na mesma conta.
-2. Na janela principal do Receiver, em "Dados de conexão", a linha "Tailscale" mostra 100.x.x.x; informe esse endereço nos ajustes do emissor. Também dá para usar o nome da máquina exibido no Tailscale.
-3. Se aparecer "não detectado", confirme primeiro que o Tailscale está conectado no computador do Receiver e clique no botão de atualizar dessa linha para detectar de novo. Se ainda assim não for detectado, vá em "Ajustes… → Tailscale → Endereço manual" no Receiver e digite o endereço mostrado no menu do Tailscale.
+1. Instale o [Tailscale](https://tailscale.com) nos dois computadores e entre com a mesma conta.
+2. Na janela principal do Receiver, em “Dados de conexão”, a linha “Tailscale” mostra um endereço 100.x.x.x. Digite-o nos ajustes do emissor. Também dá para usar o nome da máquina que aparece no Tailscale.
+3. Se aparecer “Não encontrado”, confirme primeiro que o Tailscale está conectado no Mac do Receiver e clique no botão de atualizar dessa linha para detectar de novo. Se mesmo assim não for detectado, vá em “Ajustes… → Tailscale → Endereço manual” no Receiver e digite o endereço que aparece no menu do Tailscale.
 
-O endereço do Tailscale funciona em casa e fora; quando os dois computadores estão na mesma rede local, a conexão direta é feita automaticamente.
+O endereço do Tailscale funciona em casa ou fora, e quando os dois estão na mesma rede local, a conexão passa a ser direta automaticamente.
 
 ## Segurança
 
-- Cada Receiver tem um código aleatório de 6 dígitos, e qualquer solicitação com código errado é recusada. Na janela principal do Receiver, clique em "Novo" na linha "Código" (depois disso, é preciso informar o código de novo no emissor).
-- O Receiver escuta em duas portas TCP, **8765** (texto) e **8766** (áudio), e a transmissão não é criptografada. Use apenas na rede local de casa ou pelo Tailscale, e não exponha essas portas à internet.
-- Ao colar, a área de transferência é usada temporariamente, e o conteúdo original é restaurado após cerca de 1 segundo.
+- Cada Receiver tem um código aleatório de 6 dígitos, e conexões com o código errado são sempre recusadas. Na janela principal do Receiver, clique em “Novo” na linha “Código” para gerar outro (depois, digite-o de novo no emissor).
+- O Receiver escuta uma única porta: TCP **8766** (áudio). A transmissão ainda não é criptografada. Use apenas na rede de casa ou pelo Tailscale e não exponha essa porta à internet.
 
 ## Perguntas frequentes
 
-- **Não conecta**: confirme que os dois computadores estão na mesma rede, ou que ambos estão conectados ao Tailscale. O IP local pode mudar; recomendamos definir um IP fixo para o Receiver no roteador, ou usar direto o endereço do Tailscale.
-- **Aviso de que a permissão de Acessibilidade não está ativada**: depois de recompilar ou atualizar o app, o macOS pode invalidar a autorização anterior. Remova primeiro o item antigo da lista de Acessibilidade e depois adicione-o de novo.
+- **Não conecta**: confirme que os dois computadores estão na mesma rede ou que ambos estão conectados ao Tailscale. O IP local pode mudar; vale definir um IP fixo para o Receiver no roteador ou usar direto o endereço do Tailscale.
+- **O Receiver avisa que não consegue abrir a porta**: geralmente um Receiver antigo não foi encerrado direito e ainda ocupa a porta; o Receiver encerra esse processo sozinho. Se for outro programa, o aviso mostra o nome dele, e o Receiver inicia sozinho assim que a porta for liberada.
+- **Segurar ⌃⌥ não faz nada**: o emissor precisa de acesso à **Acessibilidade**. Depois de recompilar ou atualizar o app, o macOS às vezes invalida a autorização anterior. Nesse caso, remova o item antigo da lista de Acessibilidade e adicione o app de novo.
 
 ## Atualização automática
 
-Os dois apps verificam sozinhos se há versões novas no GitHub: uma vez 30 segundos após abrir e, depois, a cada 6 horas. Ao encontrar uma versão nova, eles baixam, substituem e reabrem automaticamente.
+Os dois apps verificam sozinhos se há versões novas no GitHub: uma vez 30 segundos depois de abrir e, a partir daí, a cada 6 horas. Quando encontram uma versão nova, baixam, substituem e reabrem automaticamente.
 
-- O número da versão atual aparece no canto inferior esquerdo da janela principal; em "Ajustes… → Geral" você pode clicar em "Verificar atualizações" para checar na hora.
-- Se não quiser instalação automática, desative "Instalar atualizações automaticamente" em "Ajustes… → Geral". A partir daí, quando houver uma versão nova, os ajustes mostrarão o botão "Atualizar para x.y.z" (o mesmo item aparece também no menu da barra de menus), e a atualização só acontece quando você clicar.
-- Não interrompe você durante o uso: o emissor não atualiza enquanto a janelinha de ditado está aberta; o Receiver também não atualiza durante o envio de áudio, nem se tiver recebido texto no último minuto.
-- Segurança: a versão nova precisa ser assinada com **o mesmo certificado** da versão atual; caso contrário, a instalação é recusada.
-- Depois da atualização, as permissões de Acessibilidade, microfone etc. são mantidas; não é preciso concedê-las de novo.
+- O número da versão atual aparece no canto inferior esquerdo da janela principal; em “Ajustes… → Geral”, clique em “Verificar atualizações” para verificar na hora.
+- Se não quiser instalação automática, desative “Instalar atualizações automaticamente” em “Ajustes… → Geral”. A partir daí, quando sair uma versão nova, os ajustes mostram o botão “Atualizar para x.y.z”, e o menu da barra de menus ganha a mesma opção; a atualização só acontece quando você clica.
+- Sem interrupções: enquanto o áudio está sendo enviado, nada é atualizado.
+- Segurança: a versão nova precisa ser assinada com o **mesmo certificado** da versão atual; caso contrário, a instalação é recusada.
+- Depois da atualização, permissões como Acessibilidade e Microfone continuam valendo, sem precisar autorizar de novo.
 
 ## License
 
